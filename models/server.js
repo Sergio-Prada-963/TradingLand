@@ -1,21 +1,27 @@
 const express = require('express');
-const cors = require('cors');
+const connectionDB = require('../config/config.js');
 class Server {
     constructor(){
         this.app = express();
         this.port = process.env.PORT
-        this.usuariosPath = "/api/usuarios"; 
+        this.app.use(express.json());
+        this.dineroPath = "/api/dinero"; 
+        this.accionesPath = "/api/acciones"; 
+        this.tipoDPath = "/api/tipoD"; 
+        this.tradersPath = "/api/traders"; 
         //Middlewares
-        this.middlewares();
         this.routes(); 
+        this.coneccion();
     }
-    middlewares(){
-        this.app.use(express.static('public'));
-        //cors
-        this.app.use(cors());
-    }
+
     routes(){
-        this.app.use(this.usuariosPath, require('../routes/usuario.routes.js'));
+        this.app.use(this.dineroPath, require('../routes/dinero.routes.js'));
+        this.app.use(this.accionesPath, require('../routes/acciones.routes.js'));
+        this.app.use(this.tipoDPath, require('../routes/tipoD.routes.js'));
+        this.app.use(this.tradersPath, require('../routes/traders.routes.js'));
+    }
+    coneccion(){
+        connectionDB()
     }
     listen(){
         this.app.listen(this.port, ()=>{
